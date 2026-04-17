@@ -15,7 +15,6 @@
             overflow-x: hidden;
         }
         
-        /* Header */
         .header {
             background: linear-gradient(90deg, #00d4ff, #7c3aed, #ff006e);
             padding: 12px 20px;
@@ -27,7 +26,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        /* Level Info */
         .level-info {
             background: rgba(0,0,0,0.4);
             padding: 15px;
@@ -59,10 +57,9 @@
             background: linear-gradient(135deg, #dc2626, #ef4444);
         }
         
-        /* Main Layout */
         .game-container {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 320px;
             gap: 15px;
             padding: 15px;
             max-width: 1400px;
@@ -75,7 +72,6 @@
             }
         }
         
-        /* PC Preview */
         .pc-preview {
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
@@ -98,15 +94,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
         
         .pc-case {
-            width: 120px;
-            height: 200px;
-            background: linear-gradient(180deg, #2d2d2d, #1a1a1a);
+            width: 140px;
+            height: 220px;
+            background: linear-gradient(180deg, #3d3d3d, #2a2a2a);
             border-radius: 10px 10px 5px 5px;
-            border: 3px solid #444;
+            border: 3px solid #555;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -117,42 +112,58 @@
         .pc-case::before {
             content: '';
             position: absolute;
-            top: 5px;
-            width: 30px;
-            height: 20px;
-            background: #333;
+            top: 8px;
+            width: 40px;
+            height: 25px;
+            background: #444;
             border-radius: 3px;
         }
         
         .pc-case::after {
             content: '';
             position: absolute;
-            bottom: 10px;
-            width: 80px;
-            height: 60px;
-            background: repeating-linear-gradient(0deg, #222, #222 3px, #333 3px, #333 6px);
+            bottom: 15px;
+            width: 100px;
+            height: 80px;
+            background: repeating-linear-gradient(0deg, #333, #333 4px, #444 4px, #444 8px);
             border-radius: 3px;
         }
         
         .pc-led {
-            width: 8px;
-            height: 8px;
-            background: #00ff00;
+            width: 10px;
+            height: 10px;
+            background: #333;
             border-radius: 50%;
             position: absolute;
-            top: 8px;
-            right: 10px;
-            box-shadow: 0 0 10px #00ff00;
+            top: 10px;
+            right: 12px;
         }
         
-        .pc-led.off {
-            background: #333;
-            box-shadow: none;
+        .pc-led.on {
+            background: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
         }
         
-        .pc-empty-text {
-            color: #666;
+        .pc-led.incompatible {
+            background: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+        }
+        
+        .compatibility-msg {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 10px;
             font-size: 0.9rem;
+        }
+        
+        .compatibility-msg.ok {
+            background: rgba(16,185,129,0.3);
+            color: #10b981;
+        }
+        
+        .compatibility-msg.error {
+            background: rgba(239,68,68,0.3);
+            color: #ef4444;
         }
         
         .power-btn {
@@ -168,13 +179,9 @@
             transition: all 0.3s;
         }
         
-        .power-btn:hover {
+        .power-btn:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(239,68,68,0.5);
-        }
-        
-        .power-btn:active {
-            transform: scale(0.95);
         }
         
         .power-btn:disabled {
@@ -188,20 +195,18 @@
             background: linear-gradient(135deg, #059669, #10b981);
         }
         
-        /* Component List */
         .shop-section {
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
             padding: 15px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .shop-title {
             color: #00d4ff;
             margin-bottom: 15px;
             font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .component-category {
@@ -223,13 +228,13 @@
         }
         
         .component-item {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             border-radius: 10px;
             padding: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             cursor: pointer;
             border: 2px solid transparent;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -237,7 +242,7 @@
         
         .component-item:hover {
             border-color: #00d4ff;
-            transform: translateX(5px);
+            background: rgba(0,212,255,0.1);
         }
         
         .component-item.selected {
@@ -246,23 +251,25 @@
         }
         
         .component-item.incompatible {
-            opacity: 0.5;
-            border-color: #ef4444;
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-color: #ef4444 !important;
         }
         
         .component-name {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .component-price {
             color: #10b981;
             font-weight: bold;
+            font-size: 0.8rem;
         }
         
         .component-specs {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #888;
-            margin-top: 3px;
+            margin-top: 2px;
         }
         
         .selected-components {
@@ -281,13 +288,17 @@
         .selected-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.8rem;
+            padding: 4px 0;
+            font-size: 0.75rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
         .selected-item:last-child {
             border-bottom: none;
+        }
+        
+        .selected-item.incompatible {
+            color: #ef4444;
         }
         
         .sell-btn {
@@ -304,7 +315,7 @@
             transition: all 0.3s;
         }
         
-        .sell-btn:hover {
+        .sell-btn:hover:not(:disabled) {
             transform: scale(1.02);
             box-shadow: 0 0 30px rgba(124,58,237,0.5);
         }
@@ -316,7 +327,6 @@
             box-shadow: none;
         }
         
-        /* Result Popup */
         .result-popup {
             position: fixed;
             top: 50%;
@@ -341,33 +351,13 @@
             to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
         
-        .result-emoji {
-            font-size: 4rem;
-            margin-bottom: 15px;
-        }
+        .result-emoji { font-size: 4rem; margin-bottom: 15px; }
+        .result-title { font-size: 1.5rem; margin-bottom: 10px; }
+        .result-text { font-size: 1rem; color: #888; margin-bottom: 15px; }
+        .result-money { font-size: 2rem; color: #10b981; font-weight: bold; }
+        .result-money.negative { color: #ef4444; }
         
-        .result-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .result-text {
-            font-size: 1rem;
-            color: #888;
-            margin-bottom: 15px;
-        }
-        
-        .result-money {
-            font-size: 2rem;
-            color: #10b981;
-            font-weight: bold;
-        }
-        
-        .result-money.negative {
-            color: #ef4444;
-        }
-        
-        .close-btn {
+        .close-btn, .next-btn {
             margin-top: 20px;
             padding: 12px 30px;
             background: linear-gradient(135deg, #7c3aed, #a855f7);
@@ -378,19 +368,11 @@
             cursor: pointer;
         }
         
-        /* Next Level */
         .next-btn {
-            margin-top: 15px;
-            padding: 12px 30px;
             background: linear-gradient(135deg, #059669, #10b981);
-            border: none;
-            border-radius: 20px;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
+            margin-left: 10px;
         }
         
-        /* Log */
         .log-section {
             padding: 15px;
             max-width: 1400px;
@@ -401,7 +383,7 @@
             background: rgba(0,0,0,0.4);
             border-radius: 10px;
             padding: 10px;
-            max-height: 100px;
+            max-height: 80px;
             overflow-y: auto;
             font-size: 0.75rem;
         }
@@ -415,7 +397,6 @@
         .log-error { color: #ef4444; }
         .log-info { color: #00d4ff; }
         
-        /* Win Screen */
         .win-screen {
             position: fixed;
             top: 0;
@@ -430,15 +411,8 @@
             z-index: 2000;
         }
         
-        .win-screen.show {
-            display: flex;
-            animation: fadeIn 1s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .win-screen.show { display: flex; animation: fadeIn 1s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .win-title {
             font-size: 3rem;
@@ -448,11 +422,7 @@
             margin-bottom: 20px;
         }
         
-        .win-stats {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 30px;
-        }
+        .win-stats { font-size: 1.2rem; color: #888; margin-bottom: 30px; }
         
         .restart-btn {
             padding: 15px 40px;
@@ -463,6 +433,22 @@
             font-size: 1.2rem;
             cursor: pointer;
         }
+        
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .status-icon {
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .status-icon.ok { background: rgba(16,185,129,0.3); color: #10b981; }
+        .status-icon.error { background: rgba(239,68,68,0.3); color: #ef4444; }
     </style>
 </head>
 <body>
@@ -479,7 +465,10 @@
         <div class="pc-preview">
             <div class="pc-title">🖥️ ВАШ СОБРАННЫЙ ПК</div>
             <div class="pc-visual" id="pcVisual">
-                <div class="pc-empty-text">Выберите комплектующие<br>чтобы собрать ПК</div>
+                <div class="pc-case">
+                    <div class="pc-led" id="pcLed"></div>
+                </div>
+                <div class="compatibility-msg" id="compatMsg">Соберите совместимый ПК</div>
             </div>
             <button class="power-btn" id="powerBtn" onclick="testPC()" disabled>⚡️ ВКЛЮЧИТЬ И ТЕСТИРОВАТЬ</button>
         </div>
@@ -490,22 +479,12 @@
             
             <div class="selected-components">
                 <div class="selected-title">✅ ВЫБРАННЫЕ КОМПОНЕНТЫ:</div>
-                <div id="selectedList">
-                    <div class="selected-item"><span>Процессор:</span><span>-</span></div>
-                    <div class="selected-item"><span>Материнская плата:</span><span>-</span></div>
-                    <div class="selected-item"><span>Оперативная память:</span><span>-</span></div>
-                    <div class="selected-item"><span>Видеокарта:</span><span>-</span></div>
-                    <div class="selected-item"><span>SSD:</span><span>-</span></div>
-                    <div class="selected-item"><span>Блок питания:</span><span>-</span></div>
-                    <div class="selected-item"><span>Корпус:</span><span>-</span></div>
-                </div>
-                <div class="selected-item" style="border-top: 2px solid #7c3aed; margin-top: 10px; padding-top: 10px;">
+                <div id="selectedList"></div>
+                <div id="totalRow" style="border-top: 2px solid #7c3aed; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between;">
                     <span><b>ИТОГО:</b></span>
                     <span id="totalPrice" style="color: #f59e0b;"><b>0 ₽</b></span>
                 </div>
-                <button class="sell-btn" id="sellBtn" onclick="sellPC()" disabled>
-                    💰 ПРОДАТЬ ПК
-                </button>
+                <button class="sell-btn" id="sellBtn" onclick="sellPC()" disabled>💰 ПРОДАТЬ ПК</button>
             </div>
         </div>
     </div>
@@ -519,7 +498,8 @@
         <div class="result-title" id="resultTitle">ПК РАБОТАЕТ!</div>
         <div class="result-text" id="resultText">Ваш компьютер успешно прошёл тест!</div>
         <div class="result-money" id="resultMoney">+15 000 ₽</div>
-        <button class="close-btn" onclick="closeResult()">ПРОДОЛЖИТЬ</button>
+        <button class="close-btn" onclick="closeResult()">ЗАКРЫТЬ</button>
+        <button class="next-btn" id="nextBtn" onclick="nextLevel()">📢 СЛЕДУЮЩИЙ УРОВЕНЬ</button>
     </div>
     
     <div class="win-screen" id="winScreen">
@@ -529,32 +509,31 @@
     </div>
 
     <script>
-        // Game Data - 5 Levels
         const levels = [
             {
                 name: "Офисный ПК",
                 budget: 20000,
-                sellMultiplier: 1.3,
+                sellMultiplier: 1.35,
                 components: {
                     CPU: [
                         { id: 'cpu1', name: 'Intel Core i3-10100', price: 6500, socket: '1200', cores: 4, freq: '3.6 GHz' },
                         { id: 'cpu2', name: 'AMD Ryzen 3 3200G', price: 7000, socket: 'AM4', cores: 4, freq: '3.6 GHz' }
                     ],
                     Motherboard: [
-                        { id: 'mb1', name: 'ASUS Prime H410M', price: 3500, socket: '1200', ramType: 'DDR4' },
+                        { id: 'mb1', name: 'ASUS H410M', price: 3500, socket: '1200', ramType: 'DDR4' },
                         { id: 'mb2', name: 'Gigabyte B450M', price: 4000, socket: 'AM4', ramType: 'DDR4' }
                     ],
                     RAM: [
-                        { id: 'ram1', name: '8GB DDR4 2666', price: 2000, type: 'DDR4' },
-                        { id: 'ram2', name: '16GB DDR4 2666', price: 3800, type: 'DDR4' }
+                        { id: 'ram1', name: '8GB DDR4', price: 2000, type: 'DDR4' },
+                        { id: 'ram2', name: '16GB DDR4', price: 3800, type: 'DDR4' }
                     ],
                     GPU: [
-                        { id: 'gpu1', name: 'Встроенная ( Vega 8)', price: 0, vram: '0 (встроенная)' },
-                        { id: 'gpu2', name: 'GT 1030 2GB', price: 4500, vram: '2GB' }
+                        { id: 'gpu0', name: 'Встроенная (без дискретной)', price: 0, vram: '-', isIntegrated: true },
+                        { id: 'gpu1', name: 'GT 1030 2GB', price: 4500, vram: '2GB', isIntegrated: false }
                     ],
                     SSD: [
-                        { id: 'ssd1', name: '120GB SSD', price: 1500, size: '120GB' },
-                        { id: 'ssd2', name: '256GB SSD', price: 2500, size: '256GB' }
+                        { id: 'ssd1', name: '256GB SSD', price: 2500, size: '256GB' },
+                        { id: 'ssd2', name: '512GB SSD', price: 3800, size: '512GB' }
                     ],
                     PSU: [
                         { id: 'psu1', name: '450W', price: 2000, watt: 450 },
@@ -569,11 +548,11 @@
             {
                 name: "Домашний медиа-ПК",
                 budget: 40000,
-                sellMultiplier: 1.35,
+                sellMultiplier: 1.4,
                 components: {
                     CPU: [
-                        { id: 'cpu3', name: 'Intel Core i5-10400', price: 9000, socket: '1200', cores: 6, freq: '2.9 GHz' },
-                        { id: 'cpu4', name: 'AMD Ryzen 5 3600', price: 11000, socket: 'AM4', cores: 6, freq: '3.6 GHz' }
+                        { id: 'cpu3', name: 'Intel Core i5-10400', price: 9500, socket: '1200', cores: 6, freq: '2.9 GHz' },
+                        { id: 'cpu4', name: 'AMD Ryzen 5 3600', price: 11500, socket: 'AM4', cores: 6, freq: '3.6 GHz' }
                     ],
                     Motherboard: [
                         { id: 'mb3', name: 'MSI B460M', price: 5000, socket: '1200', ramType: 'DDR4' },
@@ -584,12 +563,12 @@
                         { id: 'ram4', name: '16GB DDR4 3600', price: 5500, type: 'DDR4' }
                     ],
                     GPU: [
-                        { id: 'gpu3', name: 'GTX 1650 4GB', price: 12000, vram: '4GB' },
-                        { id: 'gpu4', name: 'GTX 1660 6GB', price: 15000, vram: '6GB' }
+                        { id: 'gpu0', name: 'Встроенная (без дискретной)', price: 0, vram: '-', isIntegrated: true },
+                        { id: 'gpu2', name: 'GTX 1650 4GB', price: 12000, vram: '4GB', isIntegrated: false }
                     ],
                     SSD: [
-                        { id: 'ssd3', name: '512GB SSD NVMe', price: 4000, size: '512GB' },
-                        { id: 'ssd4', name: '1TB SSD', price: 6500, size: '1TB' }
+                        { id: 'ssd3', name: '512GB SSD NVMe', price: 4500, size: '512GB' },
+                        { id: 'ssd4', name: '1TB SSD', price: 7000, size: '1TB' }
                     ],
                     PSU: [
                         { id: 'psu3', name: '550W 80+ Bronze', price: 3500, watt: 550 },
@@ -604,7 +583,7 @@
             {
                 name: "Игровой старт",
                 budget: 70000,
-                sellMultiplier: 1.4,
+                sellMultiplier: 1.45,
                 components: {
                     CPU: [
                         { id: 'cpu5', name: 'Intel Core i5-12400F', price: 12000, socket: '1700', cores: 6, freq: '2.5 GHz' },
@@ -619,8 +598,8 @@
                         { id: 'ram6', name: '32GB DDR4 3600', price: 10000, type: 'DDR4' }
                     ],
                     GPU: [
-                        { id: 'gpu5', name: 'RTX 3060 8GB', price: 25000, vram: '8GB' },
-                        { id: 'gpu6', name: 'RTX 3060 Ti 8GB', price: 30000, vram: '8GB' }
+                        { id: 'gpu3', name: 'RTX 3060 8GB', price: 25000, vram: '8GB', isIntegrated: false },
+                        { id: 'gpu4', name: 'RTX 3060 Ti 8GB', price: 30000, vram: '8GB', isIntegrated: false }
                     ],
                     SSD: [
                         { id: 'ssd5', name: '1TB SSD NVMe', price: 7000, size: '1TB' },
@@ -639,7 +618,7 @@
             {
                 name: "Игровой Про",
                 budget: 120000,
-                sellMultiplier: 1.45,
+                sellMultiplier: 1.5,
                 components: {
                     CPU: [
                         { id: 'cpu7', name: 'Intel Core i7-12700K', price: 25000, socket: '1700', cores: 12, freq: '3.6 GHz' },
@@ -654,8 +633,8 @@
                         { id: 'ram8', name: '32GB DDR4 3600', price: 11000, type: 'DDR4' }
                     ],
                     GPU: [
-                        { id: 'gpu7', name: 'RTX 3070 8GB', price: 40000, vram: '8GB' },
-                        { id: 'gpu8', name: 'RTX 3080 10GB', price: 55000, vram: '10GB' }
+                        { id: 'gpu5', name: 'RTX 3070 8GB', price: 40000, vram: '8GB', isIntegrated: false },
+                        { id: 'gpu6', name: 'RTX 3080 10GB', price: 55000, vram: '10GB', isIntegrated: false }
                     ],
                     SSD: [
                         { id: 'ssd7', name: '2TB SSD NVMe Gen4', price: 15000, size: '2TB' },
@@ -674,7 +653,7 @@
             {
                 name: "Рабочая станция",
                 budget: 200000,
-                sellMultiplier: 1.5,
+                sellMultiplier: 1.55,
                 components: {
                     CPU: [
                         { id: 'cpu9', name: 'Intel Core i9-13900K', price: 45000, socket: '1700', cores: 24, freq: '3.0 GHz' },
@@ -689,8 +668,8 @@
                         { id: 'ram10', name: '128GB DDR5 5600', price: 45000, type: 'DDR5' }
                     ],
                     GPU: [
-                        { id: 'gpu9', name: 'RTX 4080 16GB', price: 80000, vram: '16GB' },
-                        { id: 'gpu10', name: 'RTX 4090 24GB', price: 130000, vram: '24GB' }
+                        { id: 'gpu7', name: 'RTX 4080 16GB', price: 80000, vram: '16GB', isIntegrated: false },
+                        { id: 'gpu8', name: 'RTX 4090 24GB', price: 130000, vram: '24GB', isIntegrated: false }
                     ],
                     SSD: [
                         { id: 'ssd9', name: '4TB SSD NVMe Gen4', price: 30000, size: '4TB' },
@@ -708,76 +687,76 @@
             }
         ];
 
-        // Game State
         let currentLevel = 0;
         let totalMoney = 0;
-        let selectedComponents = {
-            CPU: null,
-            Motherboard: null,
-            RAM: null,
-            GPU: null,
-            SSD: null,
-            PSU: null,
-            Case: null
-        };
+        let selectedComponents = { CPU: null, Motherboard: null, RAM: null, GPU: null, SSD: null, PSU: null, Case: null };
 
-        // Category Icons
-        const categoryIcons = {
-            CPU: '💻',
-            Motherboard: '🔲',
-            RAM: '📦',
-            GPU: '🎮',
-            SSD: '💾',
-            PSU: '⚡',
-            Case: '📦'
-        };
+        const categoryIcons = { CPU: '💻', Motherboard: '🔲', RAM: '📦', GPU: '🎮', SSD: '💾', PSU: '⚡', Case: '📦' };
+        const categoryNames = { CPU: 'Процессор', Motherboard: 'Материнская плата', RAM: 'Оперативная память', GPU: 'Видеокарта', SSD: 'SSD диск', PSU: 'Блок питания', Case: 'Корпус' };
 
-        // Init
         function init() {
             renderComponents();
             updateUI();
             addLog('🎮 Добро пожаловать в Сборщик ПК!', 'info');
-            addLog('Выберите комплектующие и продайте ПК дороже!', 'info');
+            addLog('Соберите совместимые комплектующие и продайте ПК!', 'info');
         }
 
-        // Render Components Shop
         function renderComponents() {
             const level = levels[currentLevel];
             const container = document.getElementById('componentsList');
             let html = '';
 
             for (const [category, items] of Object.entries(level.components)) {
-                html += `
-                    <div class="component-category">
-                        <div class="category-title" onclick="toggleCategory('${category}')">
-                            ${categoryIcons[category]} ${category}
-                            <span id="arrow-${category}">▼</span>
-                        </div>
-                        <div id="items-${category}">
-                            ${items.map(item => `
-                                <div class="component-item ${selectedComponents[category]?.id === item.id ? 'selected' : ''}" 
-                                     onclick="selectComponent('${category}', '${item.id}')">
-                                    <div>
-                                        <div class="component-name">${item.name}</div>
-                                        <div class="component-specs">${getSpecsString(category, item)}</div>
-                                    </div>
-                                    <div class="component-price">${item.price.toLocaleString()} ₽</div>
-                                </div>
-                            `).join('')}
-                        </div>
+                html += `<div class="component-category">
+                    <div class="category-title" onclick="toggleCategory('${category}')">
+                        ${categoryIcons[category]} ${categoryNames[category]} <span id="arrow-${category}">▼</span>
                     </div>
-                `;
+                    <div id="items-${category}">`;
+                
+                for (const item of items) {
+                    const isIncompatible = checkIncompatibility(category, item);
+                    const isSelected = selectedComponents[category]?.id === item.id;
+                    html += `<div class="component-item ${isSelected ? 'selected' : ''} ${isIncompatible ? 'incompatible' : ''}" 
+                             onclick="${isIncompatible ? '' : `selectComponent('${category}', '${item.id}')`}">
+                        <div>
+                            <div class="component-name">${item.name}</div>
+                            <div class="component-specs">${getSpecsString(category, item)}</div>
+                            ${isIncompatible ? `<div style="color:#ef4444;font-size:0.65rem;margin-top:3px;">⚠️ Несовместимо</div>` : ''}
+                        </div>
+                        <div class="component-price">${item.price.toLocaleString()} ₽</div>
+                    </div>`;
+                }
+                
+                html += `</div></div>`;
             }
 
             container.innerHTML = html;
         }
 
+        function checkIncompatibility(category, item) {
+            const sel = selectedComponents;
+            
+            if (category === 'Motherboard' && sel.CPU) {
+                if (sel.CPU.socket !== item.socket) return true;
+            }
+            if (category === 'RAM' && sel.Motherboard) {
+                if (sel.Motherboard.ramType !== item.type) return true;
+            }
+            if (category === 'CPU' && sel.Motherboard) {
+                if (item.socket !== sel.Motherboard.socket) return true;
+            }
+            if (category === 'Motherboard' && sel.RAM) {
+                if (item.ramType !== sel.RAM.type) return true;
+            }
+            return false;
+        }
+
         function getSpecsString(category, item) {
             switch(category) {
-                case 'CPU': return `${item.cores} ядер, ${item.freq}`;
-                case 'Motherboard': return `Socket: ${item.socket}, ${item.ramType}`;
-                case 'RAM': return `${item.type}, ${item.price === 0 ? 'Встроенная' : item.type}`;
-                case 'GPU': return item.vram;
+                case 'CPU': return `${item.cores} ядер, ${item.freq}, Socket ${item.socket}`;
+                case 'Motherboard': return `Socket ${item.socket}, ${item.ramType}`;
+                case 'RAM': return item.type;
+                case 'GPU': return item.isIntegrated ? 'Встроенная графика' : item.vram;
                 case 'SSD': return item.size;
                 case 'PSU': return `${item.watt}W`;
                 default: return '';
@@ -787,16 +766,10 @@
         function toggleCategory(category) {
             const items = document.getElementById(`items-${category}`);
             const arrow = document.getElementById(`arrow-${category}`);
-            if (items.style.display === 'none') {
-                items.style.display = 'block';
-                arrow.textContent = '▼';
-            } else {
-                items.style.display = 'none';
-                arrow.textContent = '▶';
-            }
+            items.style.display = items.style.display === 'none' ? 'block' : 'none';
+            arrow.textContent = items.style.display === 'none' ? '▶' : '▼';
         }
 
-        // Select Component
         function selectComponent(category, itemId) {
             const level = levels[currentLevel];
             const item = level.components[category].find(i => i.id === itemId);
@@ -812,7 +785,25 @@
             updatePCVisual();
         }
 
-        // Update UI
+        function getCompatibility() {
+            const sel = selectedComponents;
+            const issues = [];
+            
+            if (sel.CPU && sel.Motherboard) {
+                if (sel.CPU.socket !== sel.Motherboard.socket) {
+                    issues.push('CPU и Motherboard несовместимы (разные сокеты)');
+                }
+            }
+            
+            if (sel.Motherboard && sel.RAM) {
+                if (sel.Motherboard.ramType !== sel.RAM.type) {
+                    issues.push('RAM и Motherboard несовместимы (DDR4 ≠ DDR5)');
+                }
+            }
+            
+            return issues;
+        }
+
         function updateUI() {
             const level = levels[currentLevel];
             document.getElementById('levelBadge').textContent = `🎮 Уровень ${currentLevel + 1}: ${level.name}`;
@@ -828,75 +819,69 @@
             else if (remaining < level.budget * 0.2) moneyDisplay.classList.add('warning');
             
             document.getElementById('totalPrice').textContent = `${total.toLocaleString()} ₽`;
+            document.getElementById('totalPrice').style.color = remaining < 0 ? '#ef4444' : '#f59e0b';
             
             // Update selected list
             const list = document.getElementById('selectedList');
             let html = '';
+            const compatIssues = getCompatibility();
+            
             for (const [cat, item] of Object.entries(selectedComponents)) {
-                html += `<div class="selected-item"><span>${categoryIcons[cat]} ${cat}:</span><span>${item ? item.name : '-'}</span></div>`;
+                const hasIssue = compatIssues.some(i => i.includes(cat));
+                html += `<div class="selected-item ${hasIssue ? 'incompatible' : ''}">
+                    <span>${categoryIcons[cat]} ${categoryNames[cat]}:</span>
+                    <span>${item ? item.name : '-'}</span>
+                </div>`;
             }
-            html += `<div class="selected-item" style="border-top: 2px solid #7c3aed; margin-top: 10px; padding-top: 10px;">
-                <span><b>ИТОГО:</b></span>
-                <span style="color: ${remaining < 0 ? '#ef4444' : '#f59e0b'};"><b>${total.toLocaleString()} ₽</b></span>
-            </div>`;
             list.innerHTML = html;
             
-            // Check if PC is complete
+            // Check if PC is complete and compatible
             const isComplete = Object.values(selectedComponents).every(c => c !== null);
             const isWithinBudget = remaining >= 0;
+            const isCompatible = compatIssues.length === 0;
             
-            document.getElementById('powerBtn').disabled = !isComplete || !isWithinBudget;
-            document.getElementById('sellBtn').disabled = !isComplete || !isWithinBudget;
+            const canBuild = isComplete && isWithinBudget && isCompatible;
+            
+            document.getElementById('powerBtn').disabled = !canBuild;
+            document.getElementById('sellBtn').disabled = !canBuild;
         }
 
         function getTotalPrice() {
             return Object.values(selectedComponents).reduce((sum, item) => sum + (item?.price || 0), 0);
         }
 
-        // Update PC Visual
         function updatePCVisual() {
-            const visual = document.getElementById('pcVisual');
+            const led = document.getElementById('pcLed');
+            const msg = document.getElementById('compatMsg');
+            const compatIssues = getCompatibility();
             const isComplete = Object.values(selectedComponents).every(c => c !== null);
             
             if (!isComplete) {
                 const selected = Object.values(selectedComponents).filter(c => c !== null);
-                if (selected.length === 0) {
-                    visual.innerHTML = '<div class="pc-empty-text">Выберите комплектующие<br>чтобы собрать ПК</div>';
-                } else {
-                    let html = `<div class="pc-empty-text">Собрано: ${selected.length}/7 компонентов</div>`;
-                    html += '<div style="margin-top:15px; display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; text-align:left;">';
-                    for (const [cat, item] of Object.entries(selectedComponents)) {
-                        if (item) {
-                            html += `<div style="background:rgba(16,185,129,0.2); padding:8px; border-radius:8px; font-size:0.75rem;">
-                                ${categoryIcons[cat]} ${item.name}
-                            </div>`;
-                        }
-                    }
-                    html += '</div>';
-                    visual.innerHTML = html;
-                }
+                led.className = 'pc-led';
+                msg.textContent = `Собрано: ${selected.length}/7 компонентов`;
+                msg.className = 'compatibility-msg';
+            } else if (compatIssues.length > 0) {
+                led.className = 'pc-led incompatible';
+                msg.textContent = '⚠️ ' + compatIssues[0];
+                msg.className = 'compatibility-msg error';
             } else {
-                visual.innerHTML = `
-                    <div class="pc-case">
-                        <div class="pc-led off" id="pcLed"></div>
-                    </div>
-                    <div style="margin-top:15px; color:#10b981; font-size:0.9rem;">✅ Все компоненты совместимы!</div>
-                `;
+                led.className = 'pc-led';
+                msg.textContent = '✅ Все компоненты совместимы!';
+                msg.className = 'compatibility-msg ok';
             }
         }
 
-        // Test PC
         function testPC() {
             const btn = document.getElementById('powerBtn');
             const led = document.getElementById('pcLed');
             
             btn.disabled = true;
             btn.textContent = '⏳ ТЕСТИРУЕТСЯ...';
-            
             addLog('⚡ Запуск ПК...', 'info');
             
             setTimeout(() => {
-                led.classList.remove('off');
+                led.classList.add('on');
                 addLog('✅ ПК запущен успешно!', 'success');
             }, 1000);
             
@@ -907,7 +892,6 @@
             }, 2500);
         }
 
-        // Sell PC
         function sellPC() {
             const level = levels[currentLevel];
             const total = getTotalPrice();
@@ -927,21 +911,21 @@
             
             addLog(`💰 Продан за ${profit.toLocaleString()} ₽ (${earnings >= 0 ? '+' : ''}${earnings.toLocaleString()} ₽)`, earnings >= 0 ? 'success' : 'error');
             
-            popup.classList.add('show');
-            
-            // Update button to "Next Level"
-            const closeBtn = popup.querySelector('.close-btn');
-            if (currentLevel < levels.length - 1) {
-                closeBtn.textContent = '📢 СЛЕДУЮЩИЙ УРОВЕНЬ';
-                closeBtn.onclick = () => nextLevel();
+            // Show/hide next button
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentLevel >= levels.length - 1) {
+                nextBtn.textContent = '🏆 ФИНАЛ';
+                nextBtn.onclick = showWinScreen;
             } else {
-                closeBtn.textContent = '🏆 ФИНАЛ';
-                closeBtn.onclick = () => showWinScreen();
+                nextBtn.textContent = '📢 СЛЕДУЮЩИЙ УРОВЕНЬ';
+                nextBtn.onclick = nextLevel;
             }
+            
+            popup.classList.add('show');
         }
 
         function closeResult() {
-            // Default behavior - will be overridden for level progression
+            document.getElementById('resultPopup').classList.remove('show');
         }
 
         function nextLevel() {
@@ -952,20 +936,14 @@
         }
 
         function resetForLevel() {
-            selectedComponents = {
-                CPU: null,
-                Motherboard: null,
-                RAM: null,
-                GPU: null,
-                SSD: null,
-                PSU: null,
-                Case: null
-            };
+            selectedComponents = { CPU: null, Motherboard: null, RAM: null, GPU: null, SSD: null, PSU: null, Case: null };
             
             const btn = document.getElementById('powerBtn');
             btn.disabled = true;
             btn.textContent = '⚡️ ВКЛЮЧИТЬ И ТЕСТИРОВАТЬ';
             btn.classList.remove('success');
+            
+            document.getElementById('pcLed').className = 'pc-led';
             
             renderComponents();
             updateUI();
@@ -987,7 +965,6 @@
             addLog('🔄 Игра начата заново!', 'info');
         }
 
-        // Log
         function addLog(message, type = '') {
             const logBox = document.getElementById('logBox');
             const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -995,7 +972,6 @@
             logBox.innerHTML = `<div class="log-entry ${typeClass}">[${time}] ${message}</div>` + logBox.innerHTML;
         }
 
-        // Start
         init();
     </script>
 </body>
