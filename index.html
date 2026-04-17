@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖥️ Сборщик ПК</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b4e 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #00d4ff, #7c3aed, #ff006e);
+            padding: 12px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.4rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* Level Info */
+        .level-info {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .money-display {
+            background: linear-gradient(135deg, #059669, #10b981);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .money-display.warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+        }
+        
+        .money-display.danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        
+        /* Main Layout */
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 15px;
+            padding: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 900px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* PC Preview */
+        .pc-preview {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .pc-title {
+            color: #7c3aed;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .pc-visual {
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 30px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .pc-case {
+            width: 120px;
+            height: 200px;
+            background: linear-gradient(180deg, #2d2d2d, #1a1a1a);
+            border-radius: 10px 10px 5px 5px;
+            border: 3px solid #444;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+        }
+        
+        .pc-case::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            width: 30px;
+            height: 20px;
+            background: #333;
+            border-radius: 3px;
+        }
+        
+        .pc-case::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            width: 80px;
+            height: 60px;
+            background: repeating-linear-gradient(0deg, #222, #222 3px, #333 3px, #333 6px);
+            border-radius: 3px;
+        }
+        
+        .pc-led {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .pc-led.off {
+            background: #333;
+            box-shadow: none;
+        }
+        
+        .pc-empty-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .power-btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .power-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(239,68,68,0.5);
+        }
+        
+        .power-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .power-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .power-btn.success {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+        
+        /* Component List */
+        .shop-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        
+        .shop-title {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .component-category {
+            margin-bottom: 15px;
+        }
+        
+        .category-title {
+            color: #f59e0b;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .category-title:hover {
+            color: #fbbf24;
+        }
+        
+        .component-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .component-item:hover {
+            border-color: #00d4ff;
+            transform: translateX(5px);
+        }
+        
+        .component-item.selected {
+            border-color: #10b981;
+            background: rgba(16,185,129,0.2);
+        }
+        
+        .component-item.incompatible {
+            opacity: 0.5;
+            border-color: #ef4444;
+        }
+        
+        .component-name {
+            font-size: 0.85rem;
+        }
+        
+        .component-price {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .component-specs {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 3px;
+        }
+        
+        .selected-components {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .selected-title {
+            color: #10b981;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .selected-item:last-child {
+            border-bottom: none;
+        }
+        
+        .sell-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border: none;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .sell-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(124,58,237,0.5);
+        }
+        
+        .sell-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Result Popup */
+        .result-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            padding: 30px 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            border: 3px solid #7c3aed;
+        }
+        
+        .result-popup.show {
+            display: block;
+            animation: popupIn 0.5s;
+        }
+        
+        @keyframes popupIn {
+            from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .result-text {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .result-money {
+            font-size: 2rem;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .result-money.negative {
+            color: #ef4444;
+        }
+        
+        .close-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Next Level */
+        .next-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Log */
+        .log-section {
+            padding: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .log-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+        }
+        
+        .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .log-success { color: #10b981; }
+        .log-error { color: #ef4444; }
+        .log-info { color: #00d4ff; }
+        
+        /* Win Screen */
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23, #1a1a3e, #2d1b4e);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2000;
+        }
+        
+        .win-screen.show {
+            display: flex;
+            animation: fadeIn 1s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .win-title {
+            font-size: 3rem;
+            background: linear-gradient(90deg, #00d4ff, #7c3aed, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .win-stats {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .restart-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🖥️ СБОРЩИК ПК</h1>
+    </div>
+    
+    <div class="level-info">
+        <div class="level-badge" id="levelBadge">🎮 Уровень 1: Офисный ПК</div>
+        <div class="money-display" id="moneyDisplay">💰 Деньги: 20 000 ₽</div>
+    </div>
+    
+    <div class="game-container">
+        <div class="pc-preview">
+            <div class="pc-title">🖥️ ВАШ СОБРАННЫЙ ПК</div>
+            <div class="pc-visual" id="pcVisual">
+                <div class="pc-empty-text">Выберите комплектующие<br>чтобы собрать ПК</div>
+            </div>
+            <button class="power-btn" id="powerBtn" onclick="testPC()" disabled>⚡️ ВКЛЮЧИТЬ И ТЕСТИРОВАТЬ</button>
+        </div>
+        
+        <div class="shop-section">
+            <div class="shop-title">🛒 МАГАЗИН КОМПЛЕКТУЮЩИХ</div>
+            <div id="componentsList"></div>
+            
+            <div class="selected-components">
+                <div class="selected-title">✅ ВЫБРАННЫЕ КОМПОНЕНТЫ:</div>
+                <div id="selectedList">
+                    <div class="selected-item"><span>Процессор:</span><span>-</span></div>
+                    <div class="selected-item"><span>Материнская плата:</span><span>-</span></div>
+                    <div class="selected-item"><span>Оперативная память:</span><span>-</span></div>
+                    <div class="selected-item"><span>Видеокарта:</span><span>-</span></div>
+                    <div class="selected-item"><span>SSD:</span><span>-</span></div>
+                    <div class="selected-item"><span>Блок питания:</span><span>-</span></div>
+                    <div class="selected-item"><span>Корпус:</span><span>-</span></div>
+                </div>
+                <div class="selected-item" style="border-top: 2px solid #7c3aed; margin-top: 10px; padding-top: 10px;">
+                    <span><b>ИТОГО:</b></span>
+                    <span id="totalPrice" style="color: #f59e0b;"><b>0 ₽</b></span>
+                </div>
+                <button class="sell-btn" id="sellBtn" onclick="sellPC()" disabled>
+                    💰 ПРОДАТЬ ПК
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="log-section">
+        <div class="log-box" id="logBox"></div>
+    </div>
+    
+    <div class="result-popup" id="resultPopup">
+        <div class="result-emoji" id="resultEmoji">🚀</div>
+        <div class="result-title" id="resultTitle">ПК РАБОТАЕТ!</div>
+        <div class="result-text" id="resultText">Ваш компьютер успешно прошёл тест!</div>
+        <div class="result-money" id="resultMoney">+15 000 ₽</div>
+        <button class="close-btn" onclick="closeResult()">ПРОДОЛЖИТЬ</button>
+    </div>
+    
+    <div class="win-screen" id="winScreen">
+        <div class="win-title">🏆 ПОБЕДА!</div>
+        <div class="win-stats" id="winStats">Вы прошли все 5 уровней!</div>
+        <button class="restart-btn" onclick="restartGame()">🔄 ИГРАТЬ СНАЧАЛА</button>
+    </div>
+
+    <script>
+        // Game Data - 5 Levels
+        const levels = [
+            {
+                name: "Офисный ПК",
+                budget: 20000,
+                sellMultiplier: 1.3,
+                components: {
+                    CPU: [
+                        { id: 'cpu1', name: 'Intel Core i3-10100', price: 6500, socket: '1200', cores: 4, freq: '3.6 GHz' },
+                        { id: 'cpu2', name: 'AMD Ryzen 3 3200G', price: 7000, socket: 'AM4', cores: 4, freq: '3.6 GHz' }
+                    ],
+                    Motherboard: [
+                        { id: 'mb1', name: 'ASUS Prime H410M', price: 3500, socket: '1200', ramType: 'DDR4' },
+                        { id: 'mb2', name: 'Gigabyte B450M', price: 4000, socket: 'AM4', ramType: 'DDR4' }
+                    ],
+                    RAM: [
+                        { id: 'ram1', name: '8GB DDR4 2666', price: 2000, type: 'DDR4' },
+                        { id: 'ram2', name: '16GB DDR4 2666', price: 3800, type: 'DDR4' }
+                    ],
+                    GPU: [
+                        { id: 'gpu1', name: 'Встроенная ( Vega 8)', price: 0, vram: '0 (встроенная)' },
+                        { id: 'gpu2', name: 'GT 1030 2GB', price: 4500, vram: '2GB' }
+                    ],
+                    SSD: [
+                        { id: 'ssd1', name: '120GB SSD', price: 1500, size: '120GB' },
+                        { id: 'ssd2', name: '256GB SSD', price: 2500, size: '256GB' }
+                    ],
+                    PSU: [
+                        { id: 'psu1', name: '450W', price: 2000, watt: 450 },
+                        { id: 'psu2', name: '500W', price: 2800, watt: 500 }
+                    ],
+                    Case: [
+                        { id: 'case1', name: 'Budget Case', price: 1500 },
+                        { id: 'case2', name: 'Mid Tower', price: 2500 }
+                    ]
+                }
+            },
+            {
+                name: "Домашний медиа-ПК",
+                budget: 40000,
+                sellMultiplier: 1.35,
+                components: {
+                    CPU: [
+                        { id: 'cpu3', name: 'Intel Core i5-10400', price: 9000, socket: '1200', cores: 6, freq: '2.9 GHz' },
+                        { id: 'cpu4', name: 'AMD Ryzen 5 3600', price: 11000, socket: 'AM4', cores: 6, freq: '3.6 GHz' }
+                    ],
+                    Motherboard: [
+                        { id: 'mb3', name: 'MSI B460M', price: 5000, socket: '1200', ramType: 'DDR4' },
+                        { id: 'mb4', name: 'ASUS B550M', price: 6500, socket: 'AM4', ramType: 'DDR4' }
+                    ],
+                    RAM: [
+                        { id: 'ram3', name: '16GB DDR4 3200', price: 4500, type: 'DDR4' },
+                        { id: 'ram4', name: '16GB DDR4 3600', price: 5500, type: 'DDR4' }
+                    ],
+                    GPU: [
+                        { id: 'gpu3', name: 'GTX 1650 4GB', price: 12000, vram: '4GB' },
+                        { id: 'gpu4', name: 'GTX 1660 6GB', price: 15000, vram: '6GB' }
+                    ],
+                    SSD: [
+                        { id: 'ssd3', name: '512GB SSD NVMe', price: 4000, size: '512GB' },
+                        { id: 'ssd4', name: '1TB SSD', price: 6500, size: '1TB' }
+                    ],
+                    PSU: [
+                        { id: 'psu3', name: '550W 80+ Bronze', price: 3500, watt: 550 },
+                        { id: 'psu4', name: '650W 80+ Gold', price: 5000, watt: 650 }
+                    ],
+                    Case: [
+                        { id: 'case3', name: 'Mid Tower Black', price: 3000 },
+                        { id: 'case4', name: 'Mid Tower RGB', price: 4500 }
+                    ]
+                }
+            },
+            {
+                name: "Игровой старт",
+                budget: 70000,
+                sellMultiplier: 1.4,
+                components: {
+                    CPU: [
+                        { id: 'cpu5', name: 'Intel Core i5-12400F', price: 12000, socket: '1700', cores: 6, freq: '2.5 GHz' },
+                        { id: 'cpu6', name: 'AMD Ryzen 5 5600X', price: 14000, socket: 'AM4', cores: 6, freq: '3.7 GHz' }
+                    ],
+                    Motherboard: [
+                        { id: 'mb5', name: 'MSI H610M', price: 6500, socket: '1700', ramType: 'DDR4' },
+                        { id: 'mb6', name: 'Gigabyte B550M', price: 8000, socket: 'AM4', ramType: 'DDR4' }
+                    ],
+                    RAM: [
+                        { id: 'ram5', name: '16GB DDR4 3600', price: 5500, type: 'DDR4' },
+                        { id: 'ram6', name: '32GB DDR4 3600', price: 10000, type: 'DDR4' }
+                    ],
+                    GPU: [
+                        { id: 'gpu5', name: 'RTX 3060 8GB', price: 25000, vram: '8GB' },
+                        { id: 'gpu6', name: 'RTX 3060 Ti 8GB', price: 30000, vram: '8GB' }
+                    ],
+                    SSD: [
+                        { id: 'ssd5', name: '1TB SSD NVMe', price: 7000, size: '1TB' },
+                        { id: 'ssd6', name: '2TB SSD NVMe', price: 12000, size: '2TB' }
+                    ],
+                    PSU: [
+                        { id: 'psu5', name: '650W 80+ Gold', price: 5500, watt: 650 },
+                        { id: 'psu6', name: '750W 80+ Gold', price: 7000, watt: 750 }
+                    ],
+                    Case: [
+                        { id: 'case5', name: 'Gaming Tower RGB', price: 5000 },
+                        { id: 'case6', name: 'Gaming Tower Full RGB', price: 7500 }
+                    ]
+                }
+            },
+            {
+                name: "Игровой Про",
+                budget: 120000,
+                sellMultiplier: 1.45,
+                components: {
+                    CPU: [
+                        { id: 'cpu7', name: 'Intel Core i7-12700K', price: 25000, socket: '1700', cores: 12, freq: '3.6 GHz' },
+                        { id: 'cpu8', name: 'AMD Ryzen 7 5800X3D', price: 28000, socket: 'AM4', cores: 8, freq: '3.4 GHz' }
+                    ],
+                    Motherboard: [
+                        { id: 'mb7', name: 'MSI Z690', price: 15000, socket: '1700', ramType: 'DDR5' },
+                        { id: 'mb8', name: 'ASUS X570', price: 18000, socket: 'AM4', ramType: 'DDR4' }
+                    ],
+                    RAM: [
+                        { id: 'ram7', name: '32GB DDR5 5200', price: 15000, type: 'DDR5' },
+                        { id: 'ram8', name: '32GB DDR4 3600', price: 11000, type: 'DDR4' }
+                    ],
+                    GPU: [
+                        { id: 'gpu7', name: 'RTX 3070 8GB', price: 40000, vram: '8GB' },
+                        { id: 'gpu8', name: 'RTX 3080 10GB', price: 55000, vram: '10GB' }
+                    ],
+                    SSD: [
+                        { id: 'ssd7', name: '2TB SSD NVMe Gen4', price: 15000, size: '2TB' },
+                        { id: 'ssd8', name: '4TB SSD NVMe', price: 25000, size: '4TB' }
+                    ],
+                    PSU: [
+                        { id: 'psu7', name: '850W 80+ Gold', price: 9000, watt: 850 },
+                        { id: 'psu8', name: '1000W 80+ Platinum', price: 14000, watt: 1000 }
+                    ],
+                    Case: [
+                        { id: 'case7', name: 'Premium Gaming Tower', price: 10000 },
+                        { id: 'case8', name: 'Full Tower RGB', price: 15000 }
+                    ]
+                }
+            },
+            {
+                name: "Рабочая станция",
+                budget: 200000,
+                sellMultiplier: 1.5,
+                components: {
+                    CPU: [
+                        { id: 'cpu9', name: 'Intel Core i9-13900K', price: 45000, socket: '1700', cores: 24, freq: '3.0 GHz' },
+                        { id: 'cpu10', name: 'AMD Ryzen 9 7950X', price: 55000, socket: 'AM5', cores: 16, freq: '4.5 GHz' }
+                    ],
+                    Motherboard: [
+                        { id: 'mb9', name: 'ASUS ROG Z790', price: 30000, socket: '1700', ramType: 'DDR5' },
+                        { id: 'mb10', name: 'MSI X670E', price: 35000, socket: 'AM5', ramType: 'DDR5' }
+                    ],
+                    RAM: [
+                        { id: 'ram9', name: '64GB DDR5 6000', price: 25000, type: 'DDR5' },
+                        { id: 'ram10', name: '128GB DDR5 5600', price: 45000, type: 'DDR5' }
+                    ],
+                    GPU: [
+                        { id: 'gpu9', name: 'RTX 4080 16GB', price: 80000, vram: '16GB' },
+                        { id: 'gpu10', name: 'RTX 4090 24GB', price: 130000, vram: '24GB' }
+                    ],
+                    SSD: [
+                        { id: 'ssd9', name: '4TB SSD NVMe Gen4', price: 30000, size: '4TB' },
+                        { id: 'ssd10', name: '8TB SSD NVMe', price: 55000, size: '8TB' }
+                    ],
+                    PSU: [
+                        { id: 'psu9', name: '1200W 80+ Gold', price: 18000, watt: 1200 },
+                        { id: 'psu10', name: '1600W 80+ Platinum', price: 28000, watt: 1600 }
+                    ],
+                    Case: [
+                        { id: 'case9', name: 'Pro Workstation Tower', price: 20000 },
+                        { id: 'case10', name: 'Ultimate Full Tower', price: 35000 }
+                    ]
+                }
+            }
+        ];
+
+        // Game State
+        let currentLevel = 0;
+        let totalMoney = 0;
+        let selectedComponents = {
+            CPU: null,
+            Motherboard: null,
+            RAM: null,
+            GPU: null,
+            SSD: null,
+            PSU: null,
+            Case: null
+        };
+
+        // Category Icons
+        const categoryIcons = {
+            CPU: '💻',
+            Motherboard: '🔲',
+            RAM: '📦',
+            GPU: '🎮',
+            SSD: '💾',
+            PSU: '⚡',
+            Case: '📦'
+        };
+
+        // Init
+        function init() {
+            renderComponents();
+            updateUI();
+            addLog('🎮 Добро пожаловать в Сборщик ПК!', 'info');
+            addLog('Выберите комплектующие и продайте ПК дороже!', 'info');
+        }
+
+        // Render Components Shop
+        function renderComponents() {
+            const level = levels[currentLevel];
+            const container = document.getElementById('componentsList');
+            let html = '';
+
+            for (const [category, items] of Object.entries(level.components)) {
+                html += `
+                    <div class="component-category">
+                        <div class="category-title" onclick="toggleCategory('${category}')">
+                            ${categoryIcons[category]} ${category}
+                            <span id="arrow-${category}">▼</span>
+                        </div>
+                        <div id="items-${category}">
+                            ${items.map(item => `
+                                <div class="component-item ${selectedComponents[category]?.id === item.id ? 'selected' : ''}" 
+                                     onclick="selectComponent('${category}', '${item.id}')">
+                                    <div>
+                                        <div class="component-name">${item.name}</div>
+                                        <div class="component-specs">${getSpecsString(category, item)}</div>
+                                    </div>
+                                    <div class="component-price">${item.price.toLocaleString()} ₽</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function getSpecsString(category, item) {
+            switch(category) {
+                case 'CPU': return `${item.cores} ядер, ${item.freq}`;
+                case 'Motherboard': return `Socket: ${item.socket}, ${item.ramType}`;
+                case 'RAM': return `${item.type}, ${item.price === 0 ? 'Встроенная' : item.type}`;
+                case 'GPU': return item.vram;
+                case 'SSD': return item.size;
+                case 'PSU': return `${item.watt}W`;
+                default: return '';
+            }
+        }
+
+        function toggleCategory(category) {
+            const items = document.getElementById(`items-${category}`);
+            const arrow = document.getElementById(`arrow-${category}`);
+            if (items.style.display === 'none') {
+                items.style.display = 'block';
+                arrow.textContent = '▼';
+            } else {
+                items.style.display = 'none';
+                arrow.textContent = '▶';
+            }
+        }
+
+        // Select Component
+        function selectComponent(category, itemId) {
+            const level = levels[currentLevel];
+            const item = level.components[category].find(i => i.id === itemId);
+            
+            if (selectedComponents[category]?.id === itemId) {
+                selectedComponents[category] = null;
+            } else {
+                selectedComponents[category] = item;
+            }
+            
+            renderComponents();
+            updateUI();
+            updatePCVisual();
+        }
+
+        // Update UI
+        function updateUI() {
+            const level = levels[currentLevel];
+            document.getElementById('levelBadge').textContent = `🎮 Уровень ${currentLevel + 1}: ${level.name}`;
+            
+            const total = getTotalPrice();
+            const money = level.budget + totalMoney;
+            const remaining = money - total;
+            
+            const moneyDisplay = document.getElementById('moneyDisplay');
+            moneyDisplay.textContent = `💰 Деньги: ${remaining.toLocaleString()} ₽`;
+            moneyDisplay.className = 'money-display';
+            if (remaining < 0) moneyDisplay.classList.add('danger');
+            else if (remaining < level.budget * 0.2) moneyDisplay.classList.add('warning');
+            
+            document.getElementById('totalPrice').textContent = `${total.toLocaleString()} ₽`;
+            
+            // Update selected list
+            const list = document.getElementById('selectedList');
+            let html = '';
+            for (const [cat, item] of Object.entries(selectedComponents)) {
+                html += `<div class="selected-item"><span>${categoryIcons[cat]} ${cat}:</span><span>${item ? item.name : '-'}</span></div>`;
+            }
+            html += `<div class="selected-item" style="border-top: 2px solid #7c3aed; margin-top: 10px; padding-top: 10px;">
+                <span><b>ИТОГО:</b></span>
+                <span style="color: ${remaining < 0 ? '#ef4444' : '#f59e0b'};"><b>${total.toLocaleString()} ₽</b></span>
+            </div>`;
+            list.innerHTML = html;
+            
+            // Check if PC is complete
+            const isComplete = Object.values(selectedComponents).every(c => c !== null);
+            const isWithinBudget = remaining >= 0;
+            
+            document.getElementById('powerBtn').disabled = !isComplete || !isWithinBudget;
+            document.getElementById('sellBtn').disabled = !isComplete || !isWithinBudget;
+        }
+
+        function getTotalPrice() {
+            return Object.values(selectedComponents).reduce((sum, item) => sum + (item?.price || 0), 0);
+        }
+
+        // Update PC Visual
+        function updatePCVisual() {
+            const visual = document.getElementById('pcVisual');
+            const isComplete = Object.values(selectedComponents).every(c => c !== null);
+            
+            if (!isComplete) {
+                const selected = Object.values(selectedComponents).filter(c => c !== null);
+                if (selected.length === 0) {
+                    visual.innerHTML = '<div class="pc-empty-text">Выберите комплектующие<br>чтобы собрать ПК</div>';
+                } else {
+                    let html = `<div class="pc-empty-text">Собрано: ${selected.length}/7 компонентов</div>`;
+                    html += '<div style="margin-top:15px; display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; text-align:left;">';
+                    for (const [cat, item] of Object.entries(selectedComponents)) {
+                        if (item) {
+                            html += `<div style="background:rgba(16,185,129,0.2); padding:8px; border-radius:8px; font-size:0.75rem;">
+                                ${categoryIcons[cat]} ${item.name}
+                            </div>`;
+                        }
+                    }
+                    html += '</div>';
+                    visual.innerHTML = html;
+                }
+            } else {
+                visual.innerHTML = `
+                    <div class="pc-case">
+                        <div class="pc-led off" id="pcLed"></div>
+                    </div>
+                    <div style="margin-top:15px; color:#10b981; font-size:0.9rem;">✅ Все компоненты совместимы!</div>
+                `;
+            }
+        }
+
+        // Test PC
+        function testPC() {
+            const btn = document.getElementById('powerBtn');
+            const led = document.getElementById('pcLed');
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ ТЕСТИРУЕТСЯ...';
+            
+            addLog('⚡ Запуск ПК...', 'info');
+            
+            setTimeout(() => {
+                led.classList.remove('off');
+                addLog('✅ ПК запущен успешно!', 'success');
+            }, 1000);
+            
+            setTimeout(() => {
+                btn.textContent = '✅ ТЕСТ ПРОЙДЕН!';
+                btn.classList.add('success');
+                addLog('🧪 Все тесты пройдены! Можно продавать!', 'success');
+            }, 2500);
+        }
+
+        // Sell PC
+        function sellPC() {
+            const level = levels[currentLevel];
+            const total = getTotalPrice();
+            const profit = Math.round(total * level.sellMultiplier);
+            const earnings = profit - total;
+            
+            totalMoney += earnings;
+            
+            const popup = document.getElementById('resultPopup');
+            document.getElementById('resultEmoji').textContent = earnings >= 0 ? '💰' : '💸';
+            document.getElementById('resultTitle').textContent = earnings >= 0 ? 'ПК ПРОДАН!' : 'УБЫТОК!';
+            document.getElementById('resultText').textContent = `Продано за ${profit.toLocaleString()} ₽ (куплено за ${total.toLocaleString()} ₽)`;
+            
+            const moneyEl = document.getElementById('resultMoney');
+            moneyEl.textContent = `${earnings >= 0 ? '+' : ''}${earnings.toLocaleString()} ₽`;
+            moneyEl.className = 'result-money' + (earnings < 0 ? ' negative' : '');
+            
+            addLog(`💰 Продан за ${profit.toLocaleString()} ₽ (${earnings >= 0 ? '+' : ''}${earnings.toLocaleString()} ₽)`, earnings >= 0 ? 'success' : 'error');
+            
+            popup.classList.add('show');
+            
+            // Update button to "Next Level"
+            const closeBtn = popup.querySelector('.close-btn');
+            if (currentLevel < levels.length - 1) {
+                closeBtn.textContent = '📢 СЛЕДУЮЩИЙ УРОВЕНЬ';
+                closeBtn.onclick = () => nextLevel();
+            } else {
+                closeBtn.textContent = '🏆 ФИНАЛ';
+                closeBtn.onclick = () => showWinScreen();
+            }
+        }
+
+        function closeResult() {
+            // Default behavior - will be overridden for level progression
+        }
+
+        function nextLevel() {
+            currentLevel++;
+            resetForLevel();
+            document.getElementById('resultPopup').classList.remove('show');
+            addLog(`🎮 Уровень ${currentLevel + 1}: ${levels[currentLevel].name}`, 'info');
+        }
+
+        function resetForLevel() {
+            selectedComponents = {
+                CPU: null,
+                Motherboard: null,
+                RAM: null,
+                GPU: null,
+                SSD: null,
+                PSU: null,
+                Case: null
+            };
+            
+            const btn = document.getElementById('powerBtn');
+            btn.disabled = true;
+            btn.textContent = '⚡️ ВКЛЮЧИТЬ И ТЕСТИРОВАТЬ';
+            btn.classList.remove('success');
+            
+            renderComponents();
+            updateUI();
+            updatePCVisual();
+        }
+
+        function showWinScreen() {
+            const totalEarned = totalMoney;
+            document.getElementById('winStats').textContent = `Всего заработано: ${totalEarned.toLocaleString()} ₽`;
+            document.getElementById('winScreen').classList.add('show');
+            document.getElementById('resultPopup').classList.remove('show');
+        }
+
+        function restartGame() {
+            currentLevel = 0;
+            totalMoney = 0;
+            document.getElementById('winScreen').classList.remove('show');
+            resetForLevel();
+            addLog('🔄 Игра начата заново!', 'info');
+        }
+
+        // Log
+        function addLog(message, type = '') {
+            const logBox = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            const typeClass = type ? `log-${type}` : '';
+            logBox.innerHTML = `<div class="log-entry ${typeClass}">[${time}] ${message}</div>` + logBox.innerHTML;
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
